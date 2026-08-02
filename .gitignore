@@ -1,0 +1,30 @@
+# Environment and Secret Credentials
+.env
+.env.local
+*.env
+
+# Local Config and Downloaded Data
+config/
+activities/
+data/
+
+# Python Bytecode and Build Artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# IDE and OS Files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,23 @@
+services:
+  wahoo-fit-sync:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wahoo-fit-sync
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8085}:8080"
+    env_file:
+      - .env
+    environment:
+      - WAHOO_CLIENT_ID=${WAHOO_CLIENT_ID}
+      - WAHOO_CLIENT_SECRET=${WAHOO_CLIENT_SECRET}
+      - WAHOO_REDIRECT_URI=${WAHOO_REDIRECT_URI:-https://localhost:8085/callback}
+      - WAHOO_SCOPES=${WAHOO_SCOPES:-user_read workouts_read}
+      - SYNC_TIME_WINDOW=${SYNC_TIME_WINDOW:-1_week}
+      - SYNC_CRON=${SYNC_CRON:-0 2 * * *}
+      - PORT=8080
+      - DATA_DIR=/data
+    volumes:
+      - ./config:/data/config
+      - ./activities:/data/downloads
