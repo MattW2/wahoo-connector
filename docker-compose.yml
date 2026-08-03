@@ -1,8 +1,10 @@
 services:
   wahoo-fit-sync:
+    # Build locally or pull pre-built image from GitHub Container Registry (GHCR)
     build:
       context: .
       dockerfile: Dockerfile
+    image: ghcr.io/mattw2/wahoo-fit-sync:latest
     container_name: wahoo-fit-sync
     restart: unless-stopped
     ports:
