@@ -55,7 +55,7 @@ HTML_TEMPLATE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wahoo-fit-sync</title>
-    <link rel="icon" type="image/jpeg" href="/static/icon.jpg">
+    <link rel="icon" type="image/png" href="/static/icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -374,7 +374,7 @@ HTML_TEMPLATE = """
     <div class="container">
         <header>
             <div class="logo-title">
-                <img src="/static/icon.jpg" class="logo-img" alt="wahoo-fit-sync logo">
+                <img src="/static/icon.png" class="logo-img" alt="wahoo-fit-sync logo">
                 <div>
                     <h1>wahoo-fit-sync</h1>
                     <div style="font-size: 0.8rem; color: var(--text-secondary);">Automatic FIT File Downloader</div>
