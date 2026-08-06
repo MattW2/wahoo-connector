@@ -21,7 +21,7 @@ from app.wahoo_client import WahooClient
 from app.sync import load_tokens, save_tokens, load_history, get_all_activities
 from app.scheduler import scheduler
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "wahoo_fit_sync_secret_key_12345")
 
 def ensure_ssl_certs():
@@ -55,6 +55,7 @@ HTML_TEMPLATE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wahoo-fit-sync</title>
+    <link rel="icon" type="image/jpeg" href="/static/icon.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -110,18 +111,13 @@ HTML_TEMPLATE = """
             gap: 0.75rem;
         }
 
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, var(--accent-color), #ff8800);
+        .logo-img {
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.3rem;
-            color: white;
+            object-fit: cover;
             box-shadow: 0 4px 14px rgba(255, 85, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         h1 {
@@ -378,7 +374,7 @@ HTML_TEMPLATE = """
     <div class="container">
         <header>
             <div class="logo-title">
-                <div class="logo-icon">W</div>
+                <img src="/static/icon.jpg" class="logo-img" alt="wahoo-fit-sync logo">
                 <div>
                     <h1>wahoo-fit-sync</h1>
                     <div style="font-size: 0.8rem; color: var(--text-secondary);">Automatic FIT File Downloader</div>
