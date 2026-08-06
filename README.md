@@ -1,19 +1,37 @@
-# wahoo-fit-sync
+<p align="center">
+  <img src="assets/logo.jpg" alt="wahoo-fit-sync Logo" width="180" style="border-radius: 24px;" />
+</p>
 
-`wahoo-fit-sync` is a lightweight, containerized tool that connects to the [Wahoo Fitness Cloud API](https://developers.wahooligan.com/) to automatically download your workout activities as `.FIT` files into a local directory.
+<h1 align="center">wahoo-fit-sync</h1>
 
-It features **incremental syncing** and **deduplication**, ensuring only new workouts are downloaded and previously downloaded activities are never re-downloaded.
+<p align="center">
+  <strong>A self-hosted Docker application to automatically sync and download Wahoo Fitness workouts as .FIT files.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/MattW2/wahoo-fit-sync/actions"><img src="https://github.com/MattW2/wahoo-fit-sync/workflows/Build%20and%20Publish%20Docker%20Image%20to%20GHCR/badge.svg" alt="Build Status"></a>
+  <a href="https://github.com/MattW2/wahoo-fit-sync/pkgs/container/wahoo-fit-sync"><img src="https://img.shields.io/badge/Docker-GHCR-blue?logo=docker" alt="GHCR Docker Image"></a>
+  <a href="https://github.com/MattW2/wahoo-fit-sync/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
+</p>
+
+---
+
+`wahoo-fit-sync` is a lightweight, containerized tool that connects to the [Wahoo Fitness Cloud API](https://developers.wahooligan.com/) to automatically download your workout activities as standard `.FIT` files into a local directory on your server or NAS.
+
+It features **incremental syncing**, **smart deduplication**, **dynamic HTTP header rate limiting**, **daily cron scheduling**, and **atomic file writing** for seamless integration with self-hosted fitness dashboards like [Dreeve](https://github.com/dreeveapp/dreeve).
 
 ---
 
 ## 🌟 Key Features
 
-* **Incremental Sync**: Scans your Wahoo workout history and downloads only new/recent activities.
-* **Deduplication**: Tracks downloaded workout IDs in a persistent JSON database (`/data/config/sync_history.json`) and skips existing files.
-* **Automatic Interval Syncing**: Background daemon mode automatically checks for new workouts every X minutes (e.g. `SYNC_INTERVAL_MINUTES=60`).
-* **Built-in Web Interface**: Includes a clean dashboard at `http://localhost:8080` for one-click OAuth authorization, viewing sync status, and triggering manual syncs on demand.
-* **Persistent Token Refresh**: Automatically handles OAuth 2.0 access token renewals using saved refresh tokens without requiring repeated logins.
-* **Docker Ready**: Pre-configured with `Dockerfile` and `docker-compose.yml` mapping `./activities` for `.FIT` file storage.
+* 🚴 **Automatic Wahoo OAuth Sync**: Authenticates via Wahoo Cloud API (`user_read workouts_read`) and downloads binary `.FIT` workout files.
+* ⏱️ **Time Window Selector**: Sync workouts from the last 1 Day, 1 Week, 1 Month, 1 Year, or All Time directly from the web interface.
+* ⏰ **Cron & Interval Scheduler**: Configurable 5-field cron syntax (`SYNC_CRON=0 2 * * *`) for automated daily background downloads.
+* ⚡ **Dynamic Header Rate Limiter**: Monitors Wahoo API `X-RateLimit-Remaining` HTTP response headers in real time to prevent rate-limit errors (`429`).
+* 🔄 **Smart Deduplication**: Queries workouts in descending order (newest first) and stops early on previously downloaded activities to save API requests.
+* 🧩 **Dreeve / Watch Folder Integration**: Implements atomic file writing (`.tmp` $\rightarrow$ `.fit`) so fitness tracking dashboards (like Dreeve) can safely watch and import new workouts.
+* 🎨 **Glassmorphism Web Dashboard**: Includes a modern HTTPS web interface on port 8085 with live status auto-polling every 3 seconds.
+* 🐳 **Docker & Unraid Ready**: Pre-configured with `Dockerfile`, `docker-compose.yml`, and GitHub Container Registry (`ghcr.io/mattw2/wahoo-fit-sync:latest`).
 
 ---
 
@@ -25,8 +43,8 @@ It features **incremental syncing** and **deduplication**, ensuring only new wor
 2. Click **Create Application**.
 3. Fill in the required fields:
    * **App Name**: `wahoo-fit-sync` (or your preferred name)
-   * **Redirect URI**: `http://localhost:8080/callback` *(or your server's custom domain/IP)*
-   * **Webhook URI**: Leave blank (or re-enter `http://localhost:8080/callback` if required)
+   * **Redirect URI**: `https://<YOUR-SERVER-IP>:8085/callback` *(e.g. `https://192.168.1.100:8085/callback`)*
+   * **Webhook URI**: Leave blank
 4. Submit the application and copy your **Client ID** and **Client Secret**.
 
 ---
@@ -38,42 +56,46 @@ Create or edit the `.env` file in the project root:
 ```ini
 WAHOO_CLIENT_ID=your_client_id_here
 WAHOO_CLIENT_SECRET=your_client_secret_here
-WAHOO_REDIRECT_URI=http://localhost:8080/callback
-SYNC_INTERVAL_MINUTES=60
-PORT=8080
+WAHOO_REDIRECT_URI=https://192.168.1.100:8085/callback
+SYNC_TIME_WINDOW=1_week
+SYNC_CRON=0 2 * * *
+PORT=8085
 ```
 
 ---
 
-### Step 3: Start with Docker Compose
+### Step 3: Run with Docker Compose
 
-Run the container using Docker Compose:
-
-```bash
-docker compose up -d --build
+```yaml
+services:
+  wahoo-fit-sync:
+    image: ghcr.io/mattw2/wahoo-fit-sync:latest
+    container_name: wahoo-fit-sync
+    restart: unless-stopped
+    ports:
+      - "8085:8080"
+    env_file:
+      - .env
+    volumes:
+      - ./config:/data/config
+      - ./activities:/data/downloads
 ```
 
-Or using standard Docker CLI:
+Start the container:
 
 ```bash
-docker build -t wahoo-fit-sync .
-docker run -d \
-  --name wahoo-fit-sync \
-  -p 8080:8080 \
-  --env-file .env \
-  -v $(pwd)/config:/data/config \
-  -v $(pwd)/activities:/data/downloads \
-  wahoo-fit-sync
+docker compose up -d
 ```
 
 ---
 
 ### Step 4: One-Click Authentication
 
-1. Open your web browser and navigate to **`http://localhost:8080`**.
-2. Click the **Connect Wahoo Account** button.
-3. Authorize the application on Wahoo's website.
-4. You will be redirected back to the dashboard, and `wahoo-fit-sync` will immediately perform its initial sync!
+1. Open your web browser and navigate to **`https://<YOUR-SERVER-IP>:8085`**.
+2. Accept the self-signed SSL certificate in your browser if prompted.
+3. Click **Connect Wahoo Account**.
+4. Authorize the application on Wahoo's website.
+5. You will be redirected back to the dashboard, and `wahoo-fit-sync` will immediately perform its initial sync!
 
 All downloaded `.FIT` files will be saved in the `./activities` folder on your host machine.
 
@@ -85,9 +107,10 @@ All downloaded `.FIT` files will be saved in the `./activities` folder on your h
 | :--- | :--- | :--- |
 | `WAHOO_CLIENT_ID` | *Required* | Client ID from Wahoo Developer Portal |
 | `WAHOO_CLIENT_SECRET` | *Required* | Client Secret from Wahoo Developer Portal |
-| `WAHOO_REDIRECT_URI` | `http://localhost:8080/callback` | OAuth redirect URI matching Wahoo App settings |
-| `SYNC_INTERVAL_MINUTES` | `60` | Background sync frequency in minutes (`0` disables background scheduler) |
-| `PORT` | `8080` | Port for web server dashboard & OAuth callback |
+| `WAHOO_REDIRECT_URI` | `https://localhost:8085/callback` | OAuth redirect URI matching Wahoo App settings |
+| `SYNC_TIME_WINDOW` | `1_week` | Default sync timeframe (`1_day`, `1_week`, `1_month`, `1_year`, `all_time`) |
+| `SYNC_CRON` | `0 2 * * *` | 5-field Cron schedule for auto-syncing (default: daily at 02:00 UTC) |
+| `PORT` | `8085` | Port for web server dashboard & OAuth callback |
 | `DATA_DIR` | `/data` | Internal container path for config and downloads |
 
 ---
@@ -96,6 +119,8 @@ All downloaded `.FIT` files will be saved in the `./activities` folder on your h
 
 ```text
 wahoo-fit-sync/
+├── assets/
+│   └── logo.jpg           # Project branding logo
 ├── activities/            # Local directory where .FIT files are saved
 │   ├── 2026-07-28_workout_1234567.fit
 │   └── 2026-07-25_workout_1234566.fit
@@ -105,9 +130,9 @@ wahoo-fit-sync/
 ├── app/
 │   ├── __init__.py
 │   ├── main.py            # Flask Web UI & server routes
-│   ├── scheduler.py       # Background interval sync scheduler
+│   ├── scheduler.py       # Cron & interval background scheduler
 │   ├── sync.py            # Incremental sync & deduplication logic
-│   └── wahoo_client.py    # Wahoo API & OAuth client
+│   └── wahoo_client.py    # Wahoo API client with dynamic header rate limiting
 ├── .env                   # Local configuration
 ├── docker-compose.yml
 ├── Dockerfile
