@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://github.com/MattW2/wahoo-connector/actions"><img src="https://github.com/MattW2/wahoo-connector/workflows/Build%20and%20Publish%20Docker%20Image%20to%20GHCR/badge.svg" alt="Build Status"></a>
   <a href="https://github.com/MattW2/wahoo-connector/pkgs/container/wahoo-connector"><img src="https://img.shields.io/badge/Docker-GHCR-blue?logo=docker" alt="GHCR Docker Image"></a>
-  <a href="https://github.com/MattW2/wahoo-connector/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
+  <a href="https://github.com/MattW2/wahoo-connector/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue" alt="License"></a>
 </p>
 
 ---
@@ -143,4 +143,4 @@ wahoo-connector/
 
 ## 🧪 License
 
-MIT License. Free for personal and non-commercial use.
+GNU Affero General Public License v3.0 (AGPL-3.0). See [LICENSE](LICENSE) for details.
