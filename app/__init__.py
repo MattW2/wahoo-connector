@@ -1,1 +1,1 @@
-# wahoo-fit-sync application package
+# wahoo-connector application package

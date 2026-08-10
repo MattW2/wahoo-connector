@@ -5,7 +5,7 @@ import time
 from datetime import datetime, timedelta
 from app.wahoo_client import WahooClient
 
-logger = logging.getLogger("wahoo_fit_sync.sync")
+logger = logging.getLogger("wahoo_connector.sync")
 
 def get_data_paths():
     data_dir = os.getenv("DATA_DIR", "/data")

@@ -6,7 +6,7 @@ from datetime import datetime
 from croniter import croniter
 from app.sync import perform_sync, load_tokens
 
-logger = logging.getLogger("wahoo_fit_sync.scheduler")
+logger = logging.getLogger("wahoo_connector.scheduler")
 
 class SyncScheduler:
     def __init__(self):

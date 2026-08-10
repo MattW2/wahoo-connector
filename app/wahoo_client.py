@@ -4,7 +4,7 @@ import time
 import requests
 from urllib.parse import quote
 
-logger = logging.getLogger("wahoo_fit_sync.wahoo_client")
+logger = logging.getLogger("wahoo_connector.wahoo_client")
 
 WAHOO_AUTH_URL = "https://api.wahooligan.com/oauth/authorize"
 WAHOO_TOKEN_URL = "https://api.wahooligan.com/oauth/token"
