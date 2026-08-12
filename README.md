@@ -5,7 +5,7 @@
 <h1 align="center">dreeve-wahoo-connector</h1>
 
 <p align="center">
-  <strong style="font-size: 1.1em;">A self-hosted Docker application to automatically sync and download Wahoo Fitness workouts as .FIT files into a watch folder.</strong>
+  <strong style="font-size: 1.1em;">Self-hosted tool to download Wahoo workouts into Dreeve.</strong>
 </p>
 
 <p align="center">
