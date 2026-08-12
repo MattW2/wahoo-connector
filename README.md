@@ -1,22 +1,22 @@
 <p align="center">
-  <img src="assets/logo.jpg" alt="wahoo-connector Logo" width="180" style="border-radius: 24px;" />
+  <img src="assets/logo.jpg" alt="dreeve-wahoo-connector Logo" width="180" style="border-radius: 24px;" />
 </p>
 
-<h1 align="center">wahoo-connector</h1>
+<h1 align="center">dreeve-wahoo-connector</h1>
 
 <p align="center">
   <strong style="font-size: 1.1em;">A self-hosted Docker application to automatically sync and download Wahoo Fitness workouts as .FIT files into a watch folder.</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/MattW2/wahoo-connector/actions"><img src="https://github.com/MattW2/wahoo-connector/workflows/Build%20and%20Publish%20Docker%20Image%20to%20GHCR/badge.svg" alt="Build Status"></a>
-  <a href="https://github.com/MattW2/wahoo-connector/pkgs/container/wahoo-connector"><img src="https://img.shields.io/badge/Docker-GHCR-blue?logo=docker" alt="GHCR Docker Image"></a>
-  <a href="https://github.com/MattW2/wahoo-connector/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue" alt="License"></a>
+  <a href="https://github.com/dreeveapp/dreeve-wahoo-connector/actions"><img src="https://github.com/dreeveapp/dreeve-wahoo-connector/workflows/Build%20and%20Publish%20Docker%20Image%20to%20GHCR/badge.svg" alt="Build Status"></a>
+  <a href="https://github.com/dreeveapp/dreeve-wahoo-connector/pkgs/container/dreeve-wahoo-connector"><img src="https://img.shields.io/badge/Docker-GHCR-blue?logo=docker" alt="GHCR Docker Image"></a>
+  <a href="https://github.com/dreeveapp/dreeve-wahoo-connector/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue" alt="License"></a>
 </p>
 
 ---
 
-`wahoo-connector` is a lightweight, containerized tool that connects to the [Wahoo Fitness Cloud API](https://developers.wahooligan.com/) to automatically download your workout activities as standard `.FIT` files into a local directory on your server or NAS.
+`dreeve-wahoo-connector` is a lightweight, containerized tool that connects to the [Wahoo Fitness Cloud API](https://developers.wahooligan.com/) to automatically download your workout activities as standard `.FIT` files into a local directory on your server or NAS.
 
 It features **incremental syncing**, **smart deduplication**, **dynamic HTTP header rate limiting**, **daily cron scheduling**, and **atomic file writing** for seamless integration with self-hosted fitness dashboards like [Dreeve](https://github.com/dreeveapp/dreeve).
 
@@ -31,7 +31,7 @@ It features **incremental syncing**, **smart deduplication**, **dynamic HTTP hea
 * 🔄 **Smart Deduplication**: Queries workouts in descending order (newest first) and stops early on previously downloaded activities to save API requests.
 * 🧩 **Dreeve / Watch Folder Integration**: Implements atomic file writing (`.tmp` $\rightarrow$ `.fit`) so fitness tracking dashboards (like Dreeve) can safely watch and import new workouts.
 * 🎨 **Glassmorphism Web Dashboard**: Includes a modern HTTPS web interface on port 8085 with live status auto-polling every 3 seconds.
-* 🐳 **Docker & Unraid Ready**: Pre-configured with `Dockerfile`, `docker-compose.yml`, and GitHub Container Registry (`ghcr.io/mattw2/wahoo-connector:latest`).
+* 🐳 **Docker & Unraid Ready**: Pre-configured with `Dockerfile`, `docker-compose.yml`, and GitHub Container Registry (`ghcr.io/dreeveapp/dreeve-wahoo-connector:latest`).
 
 ---
 
@@ -42,7 +42,7 @@ It features **incremental syncing**, **smart deduplication**, **dynamic HTTP hea
 1. Go to the [Wahoo Developer Portal](https://developers.wahooligan.com/applications) and sign in.
 2. Click **Create Application**.
 3. Fill in the required fields:
-   * **App Name**: `wahoo-connector` (or your preferred name)
+   * **App Name**: `dreeve-wahoo-connector` (or your preferred name)
    * **Redirect URI**: `https://<YOUR-SERVER-IP>:8085/callback` *(e.g. `https://192.168.1.100:8085/callback`)*
    * **Webhook URI**: Leave blank
 4. Submit the application and copy your **Client ID** and **Client Secret**.
@@ -68,9 +68,9 @@ PORT=8085
 
 ```yaml
 services:
-  wahoo-connector:
-    image: ghcr.io/mattw2/wahoo-connector:latest
-    container_name: wahoo-connector
+  dreeve-wahoo-connector:
+    image: ghcr.io/dreeveapp/dreeve-wahoo-connector:latest
+    container_name: dreeve-wahoo-connector
     restart: unless-stopped
     ports:
       - "8085:8080"
@@ -95,7 +95,7 @@ docker compose up -d
 2. Accept the self-signed SSL certificate in your browser if prompted.
 3. Click **Connect Wahoo Account**.
 4. Authorize the application on Wahoo's website.
-5. You will be redirected back to the dashboard, and `wahoo-connector` will immediately perform its initial sync!
+5. You will be redirected back to the dashboard, and `dreeve-wahoo-connector` will immediately perform its initial sync!
 
 All downloaded `.FIT` files will be saved in the `./activities` folder on your host machine.
 
@@ -118,7 +118,7 @@ All downloaded `.FIT` files will be saved in the `./activities` folder on your h
 ## 📁 Directory Structure
 
 ```text
-wahoo-connector/
+dreeve-wahoo-connector/
 ├── assets/
 │   └── logo.jpg           # Project branding logo
 ├── activities/            # Local directory where .FIT files are saved

@@ -54,7 +54,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>wahoo-connector</title>
+    <title>dreeve-wahoo-connector</title>
     <link rel="icon" type="image/png" href="/static/icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -374,9 +374,9 @@ HTML_TEMPLATE = """
     <div class="container">
         <header>
             <div class="logo-title">
-                <img src="/static/icon.png" class="logo-img" alt="wahoo-connector logo">
+                <img src="/static/icon.png" class="logo-img" alt="dreeve-wahoo-connector logo">
                 <div>
-                    <h1>wahoo-connector</h1>
+                    <h1>dreeve-wahoo-connector</h1>
                     <div style="font-size: 0.8rem; color: var(--text-secondary);">Automatic FIT File Downloader</div>
                 </div>
             </div>
@@ -725,7 +725,7 @@ def main():
     scheduler.start()
 
     protocol = "https" if ssl_ctx else "http"
-    logger.info(f"Starting wahoo-connector server on {protocol}://0.0.0.0:{port}...")
+    logger.info(f"Starting dreeve-wahoo-connector server on {protocol}://0.0.0.0:{port}...")
     app.run(host="0.0.0.0", port=port, debug=False, ssl_context=ssl_ctx)
 
 if __name__ == "__main__":

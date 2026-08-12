@@ -1,11 +1,11 @@
 services:
-  wahoo-connector:
+  dreeve-wahoo-connector:
     # Build locally or pull pre-built image from GitHub Container Registry (GHCR)
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/mattw2/wahoo-connector:latest
-    container_name: wahoo-connector
+    image: ghcr.io/dreeveapp/dreeve-wahoo-connector:latest
+    container_name: dreeve-wahoo-connector
     restart: unless-stopped
     ports:
       - "${PORT:-8085}:8080"
